@@ -15,9 +15,10 @@ class TestViews(TestCase):
         socialive.name = "Socialive.tv"
         db.session.add(skello)
         db.session.add(socialive)
-        product_list = db.session.query(Product).all()
+        db.session.commit()
 
     def tearDown(self):
+        # pass
         db.session.remove()
         db.drop_all()
 

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <a href="{{ url_for('home') }}">← Back to list</a>
+
+  <h1>Name: {{ product.name }}</h1>
+  <h1>Id: {{ product.id }}</h1>
+
+{% endblock %}

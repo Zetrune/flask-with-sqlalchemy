@@ -1,5 +1,5 @@
 # pylint: disable=missing-function-docstring
-from flask import Flask, make_response, request, abort
+from flask import Flask, make_response, request, abort, render_template
 from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -11,6 +11,16 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 from models import Product
 from schemas import product_schema, products_schema
+
+@app.route('/')
+def home():
+    products = db.session.query(Product).all()
+    return render_template('home.html', products=products)
+
+@app.route('/<int:id>')
+def product_html(id):
+    product = db.session.query(Product).get(id)
+    return render_template('product.html', product=product)
 
 @app.route('/hello')
 def hello():
