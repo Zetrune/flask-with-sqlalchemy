@@ -18,9 +18,9 @@ class TestViews(TestCase):
         db.session.commit()
 
     def tearDown(self):
-        # pass
-        db.session.remove()
-        db.drop_all()
+        pass
+        # db.session.remove()
+        # db.drop_all()
 
     def test_products_json(self):
         payload = {"name": "Workelo"}

@@ -1,5 +1,7 @@
 # pylint: disable=missing-function-docstring
 from flask import Flask, make_response, request, abort, render_template
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -11,6 +13,9 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 from models import Product
 from schemas import product_schema, products_schema
+
+admin = Admin(app, template_mode='bootstrap3')
+admin.add_view(ModelView(Product, db.session))
 
 @app.route('/')
 def home():
