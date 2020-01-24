@@ -22,6 +22,11 @@ def home():
     products = db.session.query(Product).all()
     return render_template('home.html', products=products)
 
+@app.route('/products')
+def products():
+    products = db.session.query(Product).all()
+    return render_template('home.html', products=products)
+
 @app.route('/<int:id>')
 def product_html(id):
     product = db.session.query(Product).get(id)
