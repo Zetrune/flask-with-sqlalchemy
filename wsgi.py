@@ -16,29 +16,21 @@ from schemas import product_schema, products_schema
 def hello():
     return "Hello World!"
 
-def init_product_list():
-    skello = Product()
-    skello.name = "Skello"
-    socialive = Product()
-    socialive.name = "Socialive.tv"
-    db.session.query(Product).delete()
-    db.session.add(skello)
-    db.session.add(socialive)
-    db.session.commit()
-
-@app.route('/products')
+@app.route('/api/v1/products')
 def products_list():
     products = db.session.query(Product).all()
     response = make_response(products_schema.jsonify(products), 200)
     return response
 
-@app.route('/products/<int:product_id>', methods=['Get'])
+@app.route('/api/v1/products/<int:product_id>', methods=['Get'])
 def get_product(product_id):
-    products = db.session.query(Product).get(product_id)
-    response = make_response(product_schema.jsonify(products), 200)
+    product = db.session.query(Product).get(product_id)
+    if not product:
+        abort(404)
+    response = make_response(product_schema.jsonify(product), 200)
     return response
 
-@app.route('/products', methods=['Post'])
+@app.route('/api/v1/products', methods=['Post'])
 def create_product():
     body = request.get_json()
     if not "name" in body or body["name"] is None:
@@ -47,23 +39,23 @@ def create_product():
     new_product.name = body["name"]
     db.session.add(new_product)
     db.session.commit()
-    response = make_response("", 204)
+    response = make_response(product_schema.jsonify(new_product), 201)
     return response
 
-@app.route('/products/<int:product_id>', methods=['Patch'])
+@app.route('/api/v1/products/<int:product_id>', methods=['Patch'])
 def update_product(product_id):
     body = request.get_json()
     product = db.session.query(Product).get(product_id)
     if not product:
         abort(404)
-    if not "name" in body or body["name"] is None:
+    if not "name" in body or body["name"] is None or body["name"] == "":
         abort(422)
     product.name = body["name"]
     db.session.commit()
     response = make_response("", 204)
     return response
 
-@app.route('/products/<int:product_id>', methods=['Delete'])
+@app.route('/api/v1/products/<int:product_id>', methods=['Delete'])
 def delete_product(product_id):
     product = db.session.query(Product).get(product_id)
     if not product:
